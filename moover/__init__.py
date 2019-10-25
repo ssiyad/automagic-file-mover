@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from . import *
 
-path = "~/MooverTestDir"
+path = str(Path.home()) + "/MooverTestDir"
