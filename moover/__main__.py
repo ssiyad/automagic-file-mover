@@ -19,8 +19,14 @@ class _FileCreatedPrint(FileSystemEventHandler):
             if not _DirFunctions(ext_sub_dir).check_dir():
                 _DirFunctions(ext_sub_dir).make_dir()
                 LOGGER.info("Created new category: {}".format(ext_sub_dir))
-            shutil.move(event.src_path, ext_sub_dir)
-            LOGGER.info("Moved~ {} to {}".format(event.src_path, ext_sub_dir))
+
+            file_path = event.src_path
+
+            try:
+                shutil.move(file_path, ext_sub_dir)
+                LOGGER.info("Moved~ {} to {}".format(file_path, ext_sub_dir))
+            except shutil.Error:
+                LOGGER.warning("File {} already exists!".format(file_path))
 
 
 class _DirFunctions(object):

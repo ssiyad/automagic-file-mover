@@ -31,5 +31,3 @@ if args.source:
     SOURCE = os.path.join(Path.home(), args.source)
 if args.destination:
     DESTINATION = os.path.join(Path.home(), args.destination)
-
-LOGGER.info("Using SOURCE:{} and DESTINATION:{}".format(SOURCE, DESTINATION))
