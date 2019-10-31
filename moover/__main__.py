@@ -20,7 +20,7 @@ class _FileCreatedPrint(FileSystemEventHandler):
                 _DirFunctions(ext_sub_dir).make_dir()
                 LOGGER.info("Created new category: {}".format(ext_sub_dir))
             shutil.move(event.src_path, ext_sub_dir)
-            LOGGER.info("Moved~ Source: {} | Destination: {}".format(event.src_path, ext_sub_dir))
+            LOGGER.info("Moved~ {} to {}".format(event.src_path, ext_sub_dir))
 
 
 class _DirFunctions(object):

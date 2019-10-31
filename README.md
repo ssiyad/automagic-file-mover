@@ -22,22 +22,24 @@ pip install requirements.txt
 ```
 
 ## Usage
-Three methods are available at the moment
-- Default Source and Destination
 ```python
-python moover
-```
-- Default Source and custom Destination
-```python
-python moover <destination>
-```
-- Custom Source and Destination
-```python
-python moover <source> <destination>
+python -m moover
 ```
 
+
+## Optional arguments
+```shell
+-s, --source         Directory to watch
+-d, --destination    Directory to move files
+-h, --help           Shows help message
+```
+
+Default `source` is `Downloads` and default `destination` is `Moover`
+
+---
 ## Contribution
 - Report issues
 - Open pull request with improvements
 - Spread the word
 - Contact me directly at [Telegram](http://t.me/ssiyad)
+---
