@@ -8,25 +8,28 @@ from watchdog.observers import Observer
 from moover import SOURCE, DESTINATION, LOGGER, EXISTING
 
 
+def move_files(file_path):
+    extension = os.path.splitext(file_path)[-1]
+    ext_sub_dir = os.path.join(DESTINATION, extension.upper()[1:])
+    if not _DirFunctions(ext_sub_dir).check_dir():
+        _DirFunctions(ext_sub_dir).make_dir()
+        LOGGER.info("Created new category: {}".format(ext_sub_dir))
+
+    try:
+        shutil.move(file_path, ext_sub_dir)
+        LOGGER.info("Moved~ {} to {}".format(file_path, ext_sub_dir))
+    except shutil.Error:
+        LOGGER.warning("File {} already exists!".format(file_path))
+
+
 class _FileCreatedPrint(FileSystemEventHandler):
     def on_created(self, event):
         if os.path.isdir(event.src_path):
             LOGGER.info("Directory created: {}".format(event.src_path))
         else:
-            LOGGER.info("File created: {}".format(event.src_path))
-            extension = os.path.splitext(event.src_path)[-1]
-            ext_sub_dir = os.path.join(DESTINATION, extension.upper()[1:])
-            if not _DirFunctions(ext_sub_dir).check_dir():
-                _DirFunctions(ext_sub_dir).make_dir()
-                LOGGER.info("Created new category: {}".format(ext_sub_dir))
-
             file_path = event.src_path
-
-            try:
-                shutil.move(file_path, ext_sub_dir)
-                LOGGER.info("Moved~ {} to {}".format(file_path, ext_sub_dir))
-            except shutil.Error:
-                LOGGER.warning("File {} already exists!".format(file_path))
+            LOGGER.info("File created: {}".format(file_path))
+            move_files(file_path)
 
 
 class _DirFunctions(object):
@@ -56,7 +59,13 @@ if __name__ == "__main__":
     LOGGER.info("Moover started in {} -> {}".format(SOURCE, DESTINATION))
 
     if EXISTING:
-        pass
+        existing_files = [os.path.join(SOURCE, name) for name in os.listdir(SOURCE)
+                          if not os.path.isdir(os.path.join(SOURCE, name))]
+        if len(existing_files) > 0:
+            LOGGER.info("Moving existing files~")
+            for file in existing_files:
+                move_files(file)
+            LOGGER.info("Finished moving existing files")
 
     list_dir = [name for name in os.listdir(DESTINATION)
                 if os.path.isdir(os.path.join(DESTINATION, name))]

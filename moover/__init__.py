@@ -10,6 +10,7 @@ logging.basicConfig(
 )
 
 DEFAULT = {"SOURCE_DIR": "Downloads", "DESTINATION_DIR": "Moover"}
+EXISTING = False
 
 LOGGER = logging.getLogger(__name__)
 
