@@ -10,18 +10,19 @@ logging.basicConfig(
 )
 
 DEFAULT = {"SOURCE_DIR": "Downloads", "DESTINATION_DIR": "Moover"}
+EXISTING = False
 
 LOGGER = logging.getLogger(__name__)
 
-# else:
-#     SOURCE = os.path.join(Path.home(), sys.argv[1])
-#     DESTINATION = os.path.join(Path.home(), sys.argv[2])
 
 arguments = argparse.ArgumentParser()
 arguments.add_argument("-s", "--source",
                        help="Source directory")
 arguments.add_argument("-d", "--destination",
                        help="Destination directory")
+arguments.add_argument("-e", "--existing",
+                       action="store_true",
+                       help="Arrange existing files in source directory")
 args = arguments.parse_args()
 
 SOURCE = os.path.join(Path.home(), DEFAULT["SOURCE_DIR"])
@@ -31,3 +32,5 @@ if args.source:
     SOURCE = os.path.join(Path.home(), args.source)
 if args.destination:
     DESTINATION = os.path.join(Path.home(), args.destination)
+if args.existing:
+    EXISTING = True
