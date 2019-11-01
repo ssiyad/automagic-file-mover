@@ -5,7 +5,7 @@ import time
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from moover import SOURCE, DESTINATION, LOGGER
+from moover import SOURCE, DESTINATION, LOGGER, EXISTING
 
 
 class _FileCreatedPrint(FileSystemEventHandler):
@@ -54,6 +54,10 @@ if __name__ == "__main__":
         _DirFunctions(DESTINATION).make_dir()
         LOGGER.info("CREATED DESTINATION DIRECTORY: {}".format(DESTINATION))
     LOGGER.info("Moover started in {} -> {}".format(SOURCE, DESTINATION))
+
+    if EXISTING:
+        pass
+
     list_dir = [name for name in os.listdir(DESTINATION)
                 if os.path.isdir(os.path.join(DESTINATION, name))]
 
