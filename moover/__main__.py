@@ -1,7 +1,7 @@
 import os
 import shutil
 import time
-
+import notify2
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
@@ -11,13 +11,18 @@ from moover import SOURCE, DESTINATION, LOGGER, EXISTING
 def move_files(file_path):
     extension = os.path.splitext(file_path)[-1]
     ext_sub_dir = os.path.join(DESTINATION, extension.upper()[1:])
+    notify2.init("Moover")
     if not _DirFunctions(ext_sub_dir).check_dir():
         _DirFunctions(ext_sub_dir).make_dir()
-        LOGGER.info("Created new category: {}".format(ext_sub_dir))
+        msg_notify = "Created new category: {}".format(ext_sub_dir)
+        LOGGER.info(msg_notify)
+        notify2.Notification(msg_notify).show()
 
     try:
         shutil.move(file_path, ext_sub_dir)
-        LOGGER.info("Moved~ {} to {}".format(file_path, ext_sub_dir))
+        msg_notify = "Moved~ {} to {}".format(file_path, ext_sub_dir)
+        LOGGER.info(msg_notify)
+        notify2.Notification(msg_notify).show()
     except shutil.Error:
         LOGGER.warning("File {} already exists!".format(file_path))
 
