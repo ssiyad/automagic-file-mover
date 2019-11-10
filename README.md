@@ -31,6 +31,7 @@ python -m moover
 ```shell
 -s, --source         Directory to watch
 -d, --destination    Directory to move files
+-e, --existing       Arrange existing files in source directory
 -h, --help           Shows help message
 ```
 
