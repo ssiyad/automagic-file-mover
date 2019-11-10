@@ -12,9 +12,10 @@ def move_files(file_path):
     extension = os.path.splitext(file_path)[-1]
     dir_name = extension.upper()[1:]
     if dir_name in EXT:
-        if not _DirFunctions(os.path.join(DESTINATION, EXT[dir_name])).check_dir():
-            _DirFunctions(os.path.join(DESTINATION, EXT[dir_name])).make_dir()
-        dir_name = os.path.join(os.path.join(DESTINATION, EXT[dir_name]), dir_name)
+        full_path = os.path.join(DESTINATION, EXT[dir_name])
+        if not _DirFunctions(full_path).check_dir():
+            _DirFunctions(full_path).make_dir()
+        dir_name = os.path.join(full_path, dir_name)
     ext_sub_dir = os.path.join(DESTINATION, dir_name)
     notify2.init("Moover")
     if not _DirFunctions(ext_sub_dir).check_dir():

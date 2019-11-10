@@ -9,7 +9,7 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# Types IMAGE
+# Types IMAGE, VIDEO, SOUND
 EXT = {
     "JPG": "IMAGE",
     "MKV": "VIDEO",
