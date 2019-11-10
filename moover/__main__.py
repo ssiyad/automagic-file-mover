@@ -5,16 +5,21 @@ import notify2
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from moover import SOURCE, DESTINATION, LOGGER, EXISTING
+from moover import SOURCE, DESTINATION, LOGGER, EXISTING, EXT
 
 
 def move_files(file_path):
     extension = os.path.splitext(file_path)[-1]
-    ext_sub_dir = os.path.join(DESTINATION, extension.upper()[1:])
+    dir_name = extension.upper()[1:]
+    if dir_name in EXT:
+        if not _DirFunctions(os.path.join(DESTINATION, EXT[dir_name])).check_dir():
+            _DirFunctions(os.path.join(DESTINATION, EXT[dir_name])).make_dir()
+        dir_name = os.path.join(os.path.join(DESTINATION, EXT[dir_name]), dir_name)
+    ext_sub_dir = os.path.join(DESTINATION, dir_name)
     notify2.init("Moover")
     if not _DirFunctions(ext_sub_dir).check_dir():
         _DirFunctions(ext_sub_dir).make_dir()
-        msg_notify = "Created new category: {}".format(ext_sub_dir)
+        msg_notify = "Created new category: {}".format(dir_name)
         LOGGER.info(msg_notify)
         notify2.Notification(msg_notify).show()
 
