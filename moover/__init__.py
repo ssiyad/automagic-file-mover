@@ -9,12 +9,6 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# Types IMAGE, VIDEO, SOUND
-EXT = {
-    "JPG": "IMAGE",
-    "MKV": "VIDEO",
-    "MP3": "SOUND"
-}
 
 DEFAULT = {"SOURCE_DIR": "Downloads", "DESTINATION_DIR": "Moover"}
 EXISTING = False

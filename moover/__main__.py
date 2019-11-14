@@ -1,14 +1,18 @@
 import os
 import shutil
 import time
+
 import notify2
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from moover import SOURCE, DESTINATION, LOGGER, EXISTING, EXT
+from moover import SOURCE, DESTINATION, LOGGER, EXISTING
+from extensions import EXT
+
+notify2.init("Moover")
 
 
-def move_files(file_path):
+def move_file(file_path):
     extension = os.path.splitext(file_path)[-1]
     dir_name = extension.upper()[1:]
     if dir_name in EXT:
@@ -17,7 +21,6 @@ def move_files(file_path):
             _DirFunctions(full_path).make_dir()
         dir_name = os.path.join(full_path, dir_name)
     ext_sub_dir = os.path.join(DESTINATION, dir_name)
-    notify2.init("Moover")
     if not _DirFunctions(ext_sub_dir).check_dir():
         _DirFunctions(ext_sub_dir).make_dir()
         msg_notify = "Created new category: {}".format(dir_name)
@@ -33,14 +36,26 @@ def move_files(file_path):
         LOGGER.warning("File {} already exists!".format(file_path))
 
 
+def move_dir(file_path):
+    try:
+        shutil.move(file_path, DESTINATION)
+        msg_notify = "Moved Dir~ {} to {}".format(file_path, DESTINATION)
+        LOGGER.info(msg_notify)
+        notify2.Notification(msg_notify).show()
+    except shutil.Error:
+        LOGGER.warning("Dir {} already exists!".format(file_path))
+
+
 class _FileCreatedPrint(FileSystemEventHandler):
     def on_created(self, event):
-        if os.path.isdir(event.src_path):
-            LOGGER.info("Directory created: {}".format(event.src_path))
+        file_path = event.src_path
+        if os.path.isdir(file_path):
+            LOGGER.info("Directory created: {}".format(file_path))
+            move_dir(file_path)
         else:
-            file_path = event.src_path
-            LOGGER.info("File created: {}".format(file_path))
-            move_files(file_path)
+            if os.path.dirname(file_path) == SOURCE:
+                LOGGER.info("File created: {}".format(file_path))
+                move_file(file_path)
 
 
 class _DirFunctions(object):
@@ -75,7 +90,7 @@ if __name__ == "__main__":
         if len(existing_files) > 0:
             LOGGER.info("Moving existing files~")
             for file in existing_files:
-                move_files(file)
+                move_file(file)
             LOGGER.info("Finished moving existing files")
 
     list_dir = [name for name in os.listdir(DESTINATION)
