@@ -7,7 +7,7 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 from moover import SOURCE, DESTINATION, LOGGER, EXISTING
-from extensions import EXT
+from moover.extensions import EXT
 
 notify2.init("Moover")
 
@@ -75,7 +75,7 @@ class _DirFunctions(object):
             raise Exception
 
 
-if __name__ == "__main__":
+def main():
     if not _DirFunctions(SOURCE).check_dir():
         _DirFunctions(SOURCE).make_dir()
         LOGGER.info("CREATED SOURCE DIRECTORY: {}".format(SOURCE))
@@ -114,3 +114,7 @@ if __name__ == "__main__":
         observer.stop()
 
     observer.join()
+
+
+if __name__ == "__main__":
+    main()
