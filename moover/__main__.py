@@ -2,31 +2,60 @@ import os
 import shutil
 import time
 
+import notify2
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from moover import SOURCE, DESTINATION, LOGGER
+from moover import SOURCE, DESTINATION, LOGGER, EXISTING
+from moover.extensions import EXT
+
+notify2.init("Moover")
+
+
+def move_file(file_path):
+    extension = os.path.splitext(file_path)[-1]
+    dir_name = extension.upper()[1:]
+    if dir_name in EXT:
+        full_path = os.path.join(DESTINATION, EXT[dir_name])
+        if not _DirFunctions(full_path).check_dir():
+            _DirFunctions(full_path).make_dir()
+        dir_name = os.path.join(full_path, dir_name)
+    ext_sub_dir = os.path.join(DESTINATION, dir_name)
+    if not _DirFunctions(ext_sub_dir).check_dir():
+        _DirFunctions(ext_sub_dir).make_dir()
+        msg_notify = "Created new category: {}".format(dir_name)
+        LOGGER.info(msg_notify)
+        notify2.Notification(msg_notify).show()
+
+    try:
+        shutil.move(file_path, ext_sub_dir)
+        msg_notify = "Moved~ {} to {}".format(file_path, ext_sub_dir)
+        LOGGER.info(msg_notify)
+        notify2.Notification(msg_notify).show()
+    except shutil.Error:
+        LOGGER.warning("File {} already exists!".format(file_path))
+
+
+def move_dir(file_path):
+    try:
+        shutil.move(file_path, DESTINATION)
+        msg_notify = "Moved Dir~ {} to {}".format(file_path, DESTINATION)
+        LOGGER.info(msg_notify)
+        notify2.Notification(msg_notify).show()
+    except shutil.Error:
+        LOGGER.warning("Dir {} already exists!".format(file_path))
 
 
 class _FileCreatedPrint(FileSystemEventHandler):
     def on_created(self, event):
-        if os.path.isdir(event.src_path):
-            LOGGER.info("Directory created: {}".format(event.src_path))
+        file_path = event.src_path
+        if os.path.isdir(file_path):
+            LOGGER.info("Directory created: {}".format(file_path))
+            move_dir(file_path)
         else:
-            LOGGER.info("File created: {}".format(event.src_path))
-            extension = os.path.splitext(event.src_path)[-1]
-            ext_sub_dir = os.path.join(DESTINATION, extension.upper()[1:])
-            if not _DirFunctions(ext_sub_dir).check_dir():
-                _DirFunctions(ext_sub_dir).make_dir()
-                LOGGER.info("Created new category: {}".format(ext_sub_dir))
-
-            file_path = event.src_path
-
-            try:
-                shutil.move(file_path, ext_sub_dir)
-                LOGGER.info("Moved~ {} to {}".format(file_path, ext_sub_dir))
-            except shutil.Error:
-                LOGGER.warning("File {} already exists!".format(file_path))
+            if os.path.dirname(file_path) == SOURCE:
+                LOGGER.info("File created: {}".format(file_path))
+                move_file(file_path)
 
 
 class _DirFunctions(object):
@@ -46,7 +75,7 @@ class _DirFunctions(object):
             raise Exception
 
 
-if __name__ == "__main__":
+def main():
     if not _DirFunctions(SOURCE).check_dir():
         _DirFunctions(SOURCE).make_dir()
         LOGGER.info("CREATED SOURCE DIRECTORY: {}".format(SOURCE))
@@ -54,6 +83,16 @@ if __name__ == "__main__":
         _DirFunctions(DESTINATION).make_dir()
         LOGGER.info("CREATED DESTINATION DIRECTORY: {}".format(DESTINATION))
     LOGGER.info("Moover started in {} -> {}".format(SOURCE, DESTINATION))
+
+    if EXISTING:
+        existing_files = [os.path.join(SOURCE, name) for name in os.listdir(SOURCE)
+                          if not os.path.isdir(os.path.join(SOURCE, name))]
+        if len(existing_files) > 0:
+            LOGGER.info("Moving existing files~")
+            for file in existing_files:
+                move_file(file)
+            LOGGER.info("Finished moving existing files")
+
     list_dir = [name for name in os.listdir(DESTINATION)
                 if os.path.isdir(os.path.join(DESTINATION, name))]
 
@@ -75,3 +114,7 @@ if __name__ == "__main__":
         observer.stop()
 
     observer.join()
+
+
+if __name__ == "__main__":
+    main()

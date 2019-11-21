@@ -18,12 +18,20 @@ git clone https://github.com/ssiyad/automagic-file-mover
 cd automagic-file-mover
 python3 -m venv venv
 source venv/bin/activate
-pip install requirements.txt
+pip install .
+```
+or
+```shell
+pip install moover
 ```
 
 ## Usage
 ```python
 python -m moover
+```
+or
+```python
+moover
 ```
 
 
@@ -31,6 +39,7 @@ python -m moover
 ```shell
 -s, --source         Directory to watch
 -d, --destination    Directory to move files
+-e, --existing       Arrange existing files in source directory
 -h, --help           Shows help message
 ```
 
