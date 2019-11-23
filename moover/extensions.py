@@ -17,5 +17,6 @@ EXT = {
     "ZIP": "PACKAGE",
     "XZ": "PACKAGE",
     "GZ": "PACKAGE",
-    "RAR": "PACKAGE"
+    "RAR": "PACKAGE",
+    "EXE": "WinAPP"
 }
