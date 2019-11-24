@@ -5,10 +5,10 @@ import os
 import argparse
 
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
+    filename=os.path.join(Path.home(), ".moover_log")
 )
-
 
 DEFAULT = {"SOURCE_DIR": "Downloads", "DESTINATION_DIR": "Moover"}
 EXISTING = False
