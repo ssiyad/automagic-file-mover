@@ -13,7 +13,8 @@ from moover.extensions import EXT
 def moover_notif(desc):
     Notification(
         title="Moover",
-        description=desc
+        description=desc,
+        duration=10
     ).send()
 
 
