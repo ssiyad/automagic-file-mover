@@ -1,2 +1,3 @@
 include LICENSE
-include extensions.py
+include README.md
+include setup.py
