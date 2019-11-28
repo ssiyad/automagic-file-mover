@@ -5,7 +5,7 @@ with open('README.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='moover',
-    version='1.1.1',
+    version='1.1.2',
     packages=find_packages(),
     include_package_data=True,
     url='https://github.com/ssiyad/automagic-file-mover',
@@ -16,7 +16,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires=[
-        "notify2==0.3.1",
+        "py-notifier==0.1.0",
         "watchdog==0.9.0"
     ],
     entry_points={

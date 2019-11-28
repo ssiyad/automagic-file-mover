@@ -2,14 +2,19 @@ import os
 import shutil
 import time
 
-import notify2
+from pynotifier import Notification
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 from moover import SOURCE, DESTINATION, LOGGER, EXISTING
 from moover.extensions import EXT
 
-notify2.init("Moover")
+
+def moover_notif(desc):
+    Notification(
+        title="Moover",
+        description=desc
+    ).send()
 
 
 def move_file(file_path):
@@ -25,13 +30,13 @@ def move_file(file_path):
         _DirFunctions(ext_sub_dir).make_dir()
         msg_notify = "Created new category: {}".format(dir_name)
         LOGGER.info(msg_notify)
-        notify2.Notification(msg_notify).show()
+        moover_notif(msg_notify)
 
     try:
         shutil.move(file_path, ext_sub_dir)
         msg_notify = "Moved~ {} to {}".format(file_path, ext_sub_dir)
         LOGGER.info(msg_notify)
-        notify2.Notification(msg_notify).show()
+        moover_notif(msg_notify)
     except shutil.Error:
         LOGGER.warning("File {} already exists!".format(file_path))
 
@@ -41,7 +46,7 @@ def move_dir(file_path):
         shutil.move(file_path, DESTINATION)
         msg_notify = "Moved Dir~ {} to {}".format(file_path, DESTINATION)
         LOGGER.info(msg_notify)
-        notify2.Notification(msg_notify).show()
+        moover_notif(msg_notify)
     except shutil.Error:
         LOGGER.warning("Dir {} already exists!".format(file_path))
 
