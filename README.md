@@ -37,10 +37,10 @@ moover
 
 ## Optional arguments
 ```shell
--s, --source         Directory to watch
--d, --destination    Directory to move files
--e, --existing       Arrange existing files in source directory
--h, --help           Shows help message
+-s, --source        Directory to watch
+-d, --destination   Directory to move files
+-e, --existing      Arrange existing files in source directory
+-h, --help          Shows help message
 ```
 
 Default `source` is `Downloads` and default `destination` is `Moover`
