@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import time
@@ -6,7 +7,10 @@ from pynotifier import Notification
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from moover import SOURCE, DESTINATION, LOGGER, EXISTING, extensions as ext
+from moover import SOURCE, DESTINATION, LOGGER, EXISTING
+
+with open(os.path.join(os.path.dirname(__file__), 'extensions.py'), 'r') as f:
+    ext = json.load(f)
 
 
 def moover_notif(desc):
