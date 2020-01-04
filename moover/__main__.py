@@ -1,3 +1,4 @@
+import json
 import os
 import shutil
 import time
@@ -7,7 +8,9 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
 from moover import SOURCE, DESTINATION, LOGGER, EXISTING
-from moover.extensions import EXT
+
+with open(os.path.join(os.path.dirname(__file__), 'extensions.py'), 'r') as f:
+    ext = json.load(f)
 
 
 def moover_notif(desc):
@@ -21,8 +24,8 @@ def moover_notif(desc):
 def move_file(file_path):
     extension = os.path.splitext(file_path)[-1]
     dir_name = extension.upper()[1:]
-    if dir_name in EXT:
-        full_path = os.path.join(DESTINATION, EXT[dir_name])
+    if dir_name in ext:
+        full_path = os.path.join(DESTINATION, ext[dir_name])
         if not _DirFunctions(full_path).check_dir():
             _DirFunctions(full_path).make_dir()
         dir_name = os.path.join(full_path, dir_name)
