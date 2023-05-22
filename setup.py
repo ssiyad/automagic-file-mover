@@ -19,7 +19,7 @@ setup(
         "py-notifier==0.1.0",
         "watchdog==0.9.0",
         "beautifulsoup4==4.8.2",
-        "requests==2.22.0"
+        "requests==2.31.0"
 
     ],
     entry_points={
